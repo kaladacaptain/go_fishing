@@ -1,0 +1,28 @@
+= simple_form_for @reservation do |f|
+	- if @reservation.errors.any?
+		#error_explanation
+			%h2
+				= pluralize(@reservation.errors.count, "error")
+				prohibited this reservation from being saved:
+			%ul
+				- @reservation.errors.full_messages.each do |message|
+					%li= message
+	.field
+		= f.input :reservation_id, :as => :hidden, input_html: { value: @reservation.id }
+	.form-group
+		= f.input :first_name, input_html: { class: 'form-control'}
+	.form-group
+		= f.input :last_name, input_html: { class: 'form-control'}
+	.form-group
+		= f.input :phone_number, input_html: { class: 'form-control'}
+	.form-group
+		= f.input :email, input_html: { class: 'form-control'}
+	.form-group
+		= f.input :date, label: 'Date'
+	.form-group
+		= f.input :charter_type, as: :select, :collection => ['Full Day', '1/2 Day'], default: 'Full Day', input_html: { class: 'form-control'}
+	.form-group
+		= f.input :comment, input_html: { class: 'form-control'}
+	.form-group
+		%script.stripe-button{ src: "https://checkout.stripe.com/checkout.js",
+              data: {amount: @reservation.price*100, description: @reservation.charter_type, key: Rails.application.secrets.stripe_publishable_key}}
